@@ -1,17 +1,28 @@
 import { useState } from "react";
-import { StyleSheet, View, FlatList } from "react-native";
+import { StyleSheet, View, FlatList, Button } from "react-native";
+import { StatusBar } from "expo-status-bar";
 
 import GoalItem from "./components/GoalItem";
 import GoalInput from "./components/GoalInput";
 
 export default function App() {
+  const [modalIsVisible, setModalVisible] = useState(false)
   const [courseGoals, setCourseGoals] = useState([]);
+
+  function startAddGoalHandler() {
+    setModalVisible(true)
+  }
+
+  function endAddGoalHandler() {
+    setModalVisible(false)
+  }
 
   function addGoalHandler(enteredGoalText) {
     setCourseGoals((currentCourseGoal) => [
       ...currentCourseGoal,
       { text: enteredGoalText, id: Math.random().toString() },
     ]);
+
   }
 
   function deleteGoalHandler(id) {
@@ -21,9 +32,18 @@ export default function App() {
     });
   }
 
+
+
   return (
+    <>
+    <StatusBar style="light" />
     <View style={styles.appContainer}>
-      <GoalInput clickBtn={addGoalHandler} />
+    <Button title="Add New Goal" color="#C097F9" onPress={startAddGoalHandler} />
+
+    {/* need to click a buttom that open oportunity add item */}
+      {/* {modalIsVisible && <GoalInput clickBtn={addGoalHandler} />} */}
+
+     <GoalInput clickBtn={addGoalHandler} visible={modalIsVisible} onCancel={endAddGoalHandler} />
 
       <View style={styles.goalsContainer}>
         <FlatList
@@ -44,6 +64,7 @@ export default function App() {
         />
       </View>
     </View>
+    </>
   );
 }
 
@@ -52,8 +73,13 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 50,
     paddingHorizontal: 16,
+    // backgroundColor: '#',
   },
   goalsContainer: {
     flex: 5,
   },
 });
+
+
+//! Answers: 1) What the difference between button and Pressable components?
+
